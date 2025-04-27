@@ -12,20 +12,43 @@
             background: url("{{ url_for('static', filename='bg.gif') }}") no-repeat center center fixed;
             background-size: cover;
         }
+        .error-border {
+            border: 2px solid #ff3860 !important;
+            box-shadow: 0 0 10px #ff386044 !important;
+        }
+        .error-message {
+            color: #ff3860;
+            font-size: 14px;
+            margin: -10px 0 10px 0;
+            text-align: left;
+            transition: opacity 0.3s ease;
+        }
+        .hidden {
+            opacity: 0;
+            height: 0;
+            margin: 0;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
     
     <div class="overlay">
-        <div class="backdrop-blur"></div> <!-- отдельно! -->
+        <div class="backdrop-blur"></div>
         <div class="login-wrapper" id="loginWrapper">
             <!-- Вход -->
             <div class="login-container front">
                 <img src="{{ url_for('static', filename='logo.png') }}" alt="AlgoMind Logo" class="logo">
                 <h2>Вход в AlgoMind</h2>
-                <form method="POST" action="/enter">
-                    <input type="text" name="username" placeholder="Имя пользователя" required>
-                    <input type="password" name="password" placeholder="Пароль" required>
+                <form method="POST" action="/enter" id="loginForm">
+                    <input type="text" name="username" placeholder="Имя пользователя" required
+                           class="{% if login_error %}error-border{% endif %}"
+                           value="{{ saved_username or '' }}" id="usernameInput">
+                    <input type="password" name="password" placeholder="Пароль" required
+                           class="{% if login_error %}error-border{% endif %}" id="passwordInput">
+                    <div id="errorMessage" class="error-message {% if not login_error %}hidden{% endif %}">
+                        {{ login_error or '' }}
+                    </div>
                     <button type="submit">Войти</button>
                 </form>
                 <a href="#" class="forgot-link">Забыли пароль?</a>
@@ -61,6 +84,34 @@
         function flipCard() {
             document.getElementById('loginWrapper').classList.toggle('flipped');
         }
+        
+        // Автоматически фокусируем первое поле с ошибкой
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorField = document.querySelector('.error-border');
+            if (errorField) {
+                errorField.focus();
+            }
+            
+            // Обработчики событий для удаления ошибок при вводе
+            const usernameInput = document.getElementById('usernameInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (usernameInput && passwordInput && errorMessage) {
+                function clearError() {
+                    usernameInput.classList.remove('error-border');
+                    passwordInput.classList.remove('error-border');
+                    errorMessage.classList.add('hidden');
+                }
+                
+                usernameInput.addEventListener('input', clearError);
+                passwordInput.addEventListener('input', clearError);
+                
+                // Также очищаем ошибки при фокусе
+                usernameInput.addEventListener('focus', clearError);
+                passwordInput.addEventListener('focus', clearError);
+            }
+        });
     </script>
 </body>
 </html>

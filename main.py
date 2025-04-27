@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import bd
 
 app = Flask(__name__)
@@ -11,10 +11,7 @@ def index():
 def forgot_password():
     return "<h1>Страница восстановления пароля (в разработке)</h1>"
 
-
-
-
-@app.route("/enter", methods = ["POST"])
+@app.route("/enter", methods=["POST"])
 def enter():
     username = request.form["username"]
     password = request.form["password"]
@@ -22,8 +19,16 @@ def enter():
     if result:
         return "OK"
     else:
-        return "NE OK"
+        # Передаем ошибку и сохраненные значения обратно в шаблон
+        return render_template("index.html", 
+                            login_error="Неверный логин или пароль",
+                            saved_username=username)
 
+@app.route("/register", method=["POST"])
+def register():
+    username = request.form["username"]
+    password = request.form["password"]
+    email = request.form["email"]
 
 if __name__ == "__main__":
     app.run(debug=True)

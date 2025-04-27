@@ -7,8 +7,6 @@ sql = '''CREATE TABLE IF NOT EXISTS user_data(
     username TEXT,
     password TEXT,
     email TEXT,
-    name TEXT,
-    age TEXT,
     image TEXT
 )'''
 curs.execute(sql)
@@ -24,3 +22,17 @@ def enter(username, password):
     con.close()
     return bool(result)
 
+def add_user(username, data):
+    con = sqlite3.connect("site.db")
+    curs = con.cursor()
+    sql = f"SELECT * FROM user_data WHERE username = '{login}'"
+    curs.execute(sql)
+    result = curs.fetchone()
+    if result:
+        return False
+    else:
+        sql = f''' INSERT INTO user_data (username, password, email) VALUES (?,?,?) ''', data
+        curs.execute(sql)
+        con.commit()
+        con.close()
+        return True
