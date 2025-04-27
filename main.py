@@ -7,9 +7,16 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route("/forgot-password")
+def forgot_password():
+    return "<h1>Страница восстановления пароля (в разработке)</h1>"
+
+
+
+
 @app.route("/enter", methods = ["POST"])
 def enter():
-    login = request.form["username"]
+    username = request.form["username"]
     password = request.form["password"]
     result = bd.enter(username, password)
     if result:
@@ -18,4 +25,5 @@ def enter():
         return "NE OK"
 
 
-app.run()
+if __name__ == "__main__":
+    app.run(debug=True)

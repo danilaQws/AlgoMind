@@ -1,71 +1,177 @@
-body {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+/* ------------- ОБЩЕЕ ОФОРМЛЕНИЕ ------------- */
+body, html {
     margin: 0;
-    color: white;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    background: transparent;
 }
 
+* {
+    box-sizing: border-box;
+}
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+    overflow: hidden;
+}
+
+.backdrop-blur {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    pointer-events: none;
+}
+
+.login-wrapper {
+    z-index: 1;
+    width: 500px;
+    height: 520px;
+    position: relative;
+    transform-style: preserve-3d;
+    perspective: 1200px;
+    transition: transform 0.8s ease-in-out; /* ← вернули флип */
+}
+
+.login-wrapper.flipped {
+    transform: rotateY(180deg);
+}
 
 .login-container {
-    font-family: "Poppins", sans-serif;
-    font-weight: 100;
-    font-style: normal;
-    background: rgba(255, 255, 255, 0.9);
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    width: 350px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2),
+                0 0 80px rgba(0, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    outline: 2px solid rgba(0, 200, 255, 0.2);
+    outline-offset: -8px;
+    transition: all 0.4s ease-in-out;
 }
 
-h2 {
-    margin-bottom: 30px;
-    color: #333;
-    text-align: center;
+.login-container.back {
+    transform: rotateY(180deg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.form-group {
+.login-wrapper.flipped .login-container.front {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.login-wrapper.flipped .login-container.back {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.logo {
+    width: 80px;
     margin-bottom: 20px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
+h2 {
+    color: #00ccff;
+    margin-bottom: 20px;
 }
 
-.form-group input {
-    width: calc(100% - 24px); /* Установка ширины с учетом отступов */
-    padding: 10px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    font-size: 16px;
-    margin: 0 auto; /* Центрирование полей ввода */
-}
-
-.form-group input:focus {
-    border-color: #6a11cb;
-    box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
-    outline: none;
-}
-
-.form-group button {
+input[type="text"],
+input[type="password"],
+input[type="email"] {
     width: 100%;
     padding: 12px;
-    background: #6a11cb;
-    color: white;
+    margin-bottom: 16px;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+    font-family: "Comfortaa", sans-serif;
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
 }
 
-.form-group button:hover {
-    background: #2575fc;
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 10px #00ccff44;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0077ff, #00ccff);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: "Comfortaa", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #0055dd, #00aaff);
     transform: scale(1.05);
+    box-shadow: 0 0 12px #00ccff77;
+}
+
+.footer-text {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #ccc;
+}
+
+.forgot-link,
+.register-link {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #66d9ff;
+    text-decoration: none;
+    transition: color 0.3s, text-shadow 0.3s, transform 0.3s;
+}
+
+.forgot-link:hover,
+.register-link:hover {
+    color: #00ffff;
+    text-shadow: 0 0 8px #00ffff;
+    transform: translateY(-2px);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    pointer-events: none;
 }
