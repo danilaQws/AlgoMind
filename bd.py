@@ -6,7 +6,6 @@ sql = '''CREATE TABLE IF NOT EXISTS user_data(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT,
     password TEXT,
-    email TEXT,
     image TEXT
 )'''
 curs.execute(sql)
@@ -25,14 +24,14 @@ def enter(username, password):
 def add_user(username, data):
     con = sqlite3.connect("site.db")
     curs = con.cursor()
-    sql = f"SELECT * FROM user_data WHERE username = '{login}'"
+    sql = f"SELECT * FROM user_data WHERE username = '{username}'"
     curs.execute(sql)
     result = curs.fetchone()
     if result:
         return False
     else:
-        sql = f''' INSERT INTO user_data (username, password, email) VALUES (?,?,?) ''', data
-        curs.execute(sql)
+        sql = f''' INSERT INTO user_data (username, password) VALUES (?,?) '''
+        curs.execute(sql, data)
         con.commit()
         con.close()
         return True

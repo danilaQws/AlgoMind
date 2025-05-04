@@ -17,18 +17,32 @@ def enter():
     password = request.form["password"]
     result = bd.enter(username, password)
     if result:
-        return "OK"
+        return redirect(url_for("main"))
     else:
         # Передаем ошибку и сохраненные значения обратно в шаблон
         return render_template("index.html", 
                             login_error="Неверный логин или пароль",
                             saved_username=username)
 
-@app.route("/register", method=["POST"])
+@app.route("/register", methods=["POST"])
 def register():
     username = request.form["username"]
     password = request.form["password"]
-    email = request.form["email"]
+
+    result = bd.add_user(username, (username, password))
+
+    if result:
+        return redirect(url_for("main"))
+    else: 
+        return "no"
+
+
+@app.route("/main", methods = ["POST", "GET"])
+def main():
+    return render_template("main.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
